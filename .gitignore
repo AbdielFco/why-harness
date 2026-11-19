@@ -1,0 +1,23 @@
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+**/*credentials*.json
+**/*service-account*.json
+.cursor/mcp.json
+.vscode/mcp.json
+.opencode/opencode.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.coverage
+
+# OS / editor
+.DS_Store
