@@ -1,23 +1,25 @@
-# 0002: Planner y reviewer readonly
+# 0002: Read-only planner and reviewer
 
-- Estado: aceptada
-- Fecha: 2026-11-19
+**English** | [Español](0002-readonly-planner-and-reviewer.es.md)
 
-## Contexto
+- Status: accepted
+- Date: 2026-11-19
 
-Un agente que puede editar tiende a hacerlo: el planner "aprovecha" para arreglar, el reviewer "corrige rápido" en lugar de reportar. En ambos casos el humano pierde el punto de control.
+## Context
 
-## Decisión
+An agent that can edit tends to do it. The planner "takes the chance" to fix something. The reviewer "corrects it quickly" instead of reporting. In both cases the human loses the control point.
 
-`planner` y `reviewer` se declaran `readonly: true`. El validator ejecuta comandos pero no edita código ni docs.
+## Decision
 
-## Alternativas
+`planner` and `reviewer` are declared `readonly: true`. The validator runs commands and does not edit code or docs.
 
-| Opción | Por qué no |
+## Alternatives
+
+| Option | Why not |
 |---|---|
-| Instrucción "no edites" sin readonly | Es una sugerencia; el permiso es una garantía |
-| Reviewer que corrige | Se convierte en un segundo implementer sin plan ni test |
+| An instruction "do not edit" without readonly | It is a suggestion. The permission is a guarantee |
+| A reviewer that corrects | It becomes a second implementer, with no plan and no test |
 
-## Consecuencias
+## Consequences
 
-Cada corrección pasa por el implementer y queda dentro del plan. Depende de que la herramienta respete `readonly`.
+Every correction goes through the implementer and stays inside the plan. It depends on the tool honoring `readonly`.

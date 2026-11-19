@@ -1,23 +1,25 @@
-# 0007: Context gap como retroalimentación
+# 0007: Context gap as feedback
 
-- Estado: aceptada
-- Fecha: 2026-11-19
+**English** | [Español](0007-context-gap-feedback-loop.es.md)
 
-## Contexto
+- Status: accepted
+- Date: 2026-11-19
 
-Los agentes reportaban qué les faltó, pero ningún paso convertía ese reporte en un cambio. El mismo hueco se pagaba en cada tarea.
+## Context
 
-## Decisión
+Agents reported what they lacked, and no step turned that report into a change. The same gap was paid on every task.
 
-Cada reporte nombra la capa del gap (`AGENTS.md`, skill, knowledge). El orquestador lo anota en el work file, y al cerrar la tarea lo aplica a esa capa. Ningún gap se aplica editando un agente.
+## Decision
 
-## Alternativas
+Every report names the gap's layer (`AGENTS.md`, skill, knowledge). The orchestrator records it in the work file and, when the task closes, applies it to that layer. No gap is applied by editing an agent.
 
-| Opción | Por qué no |
+## Alternatives
+
+| Option | Why not |
 |---|---|
-| Gaps sin dueño | Se reportan y se olvidan |
-| Aplicarlos en el momento | Interrumpe la tarea y mezcla cambios de harness con el cambio de código |
+| Gaps with no owner | They get reported and forgotten |
+| Applying them immediately | It interrupts the task and mixes harness changes with the code change |
 
-## Consecuencias
+## Consequences
 
-El harness mejora con cada tarea. Aplicar gaps sin criterio infla `AGENTS.md`; la regla es preferir la capa a demanda.
+The harness improves with every task. Applying gaps without judgment inflates `AGENTS.md`. The rule is to prefer the on-demand layer.

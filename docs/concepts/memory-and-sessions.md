@@ -1,55 +1,57 @@
-# Memoria y sesiones
+# Memory and sessions
 
-## Qué es
+**English** | [Español](memory-and-sessions.es.md)
 
-La **memoria** es lo que sobrevive a una sesión. Aquí vive en disco, en tres tipos según cuánto dura:
+## What it is
 
-| Tipo | Responde | Dónde | Dura |
+**Memory** is what survives a session. Here it lives on disk, in three types by how long it lasts:
+
+| Type | It answers | Where | It lasts |
 |---|---|---|---|
-| Tarea | ¿Dónde quedamos? | `docs/work/<TICKET>.md` | Hasta cerrar la tarea |
-| Decisión | ¿Por qué es así? | `docs/decisions/NNNN-*.md` | Permanente |
-| Hecho | ¿Qué es verdad? | `docs/knowledge/` | Permanente, se actualiza |
+| Task | Where did we leave off? | `docs/work/<TICKET>.md` | Until the task closes |
+| Decision | Why is it this way? | `docs/decisions/NNNN-*.md` | Permanent |
+| Fact | What is true? | `docs/knowledge/` | Permanent, and it gets updated |
 
-## Por qué existe
+## Why it exists
 
-- **La conversación no es memoria.** Se compacta, se resume, y al abrir otra sesión desaparece.
-- **Una sesión larga se degrada.** Acumula intentos fallidos, lecturas irrelevantes y correcciones. A partir de cierto punto es más barato empezar limpio que seguir.
-- **Empezar limpio solo funciona si el estado está escrito.** El work file es lo que hace barato cambiar de sesión.
+- **The conversation is not memory.** It gets compacted and summarized, and it disappears when another session opens.
+- **A long session degrades.** It accumulates failed attempts, irrelevant reads, and corrections. Past a point, starting clean is cheaper than continuing.
+- **Starting clean only works when the state is written down.** The work file is what makes a session switch cheap.
 
-## Cómo funciona aquí
+## How it works here
 
-### El work file
+### The work file
 
-Plantilla en [work/0000-template.md](../work/0000-template.md): Phase, Goal, Plan, Remaining, Verification, Context gaps, Log.
+Template at [work/0000-template.md](../work/0000-template.md): Phase, Goal, Plan, Remaining, Verification, Context gaps, Log. The headings stay in English because the agents match them.
 
-- Lo crea el orquestador al empezar una tarea.
-- **Un solo escritor:** solo el orquestador lo edita. Los subagentes devuelven reportes y el orquestador copia lo relevante. Dos agentes escribiendo el mismo archivo producen estados contradictorios.
-- Se borra al cerrar la tarea. Lo que valga la pena conservar pasa a una decisión, a la knowledge o al PR.
+- The orchestrator creates it when a task starts.
+- **One writer:** only the orchestrator edits it. Subagents return reports and the orchestrator copies what matters. Two agents writing the same file produce contradictory state.
+- It is deleted when the task closes. Anything worth keeping moves to a decision, to knowledge, or to the PR.
 
-### Cuándo cambiar de sesión
+### When to switch session
 
-Al terminar cada fase (Plan, Implement, Verify), o antes si la sesión:
+At the end of each phase (Plan, Implement, Verify), or sooner when the session:
 
-- repite una pregunta ya respondida en el work file,
-- contradice un hecho registrado,
-- recibe dos correcciones del humano, o
-- lee más de 10 archivos sin escribir nada.
+- repeats a question already answered in the work file,
+- contradicts a recorded fact,
+- is corrected twice by the human, or
+- reads more than 10 files without writing anything.
 
-Cada señal indica que el contexto está contaminado o perdido. La sesión nueva lee `AGENTS.md`, el work file y continúa desde "Remaining".
+Each signal means the context is contaminated or lost. The new session reads `AGENTS.md` and the work file, and continues from "Remaining".
 
-### Por qué no hay carpeta de investigaciones
+### Why there is no investigations folder
 
-Una investigación que vale la pena guardar termina siendo un hecho (knowledge) o una decisión (decisions). Una tercera carpeta compite con las otras dos y nadie sabe dónde buscar.
+An investigation worth keeping ends as a fact (knowledge) or a decision (decisions). A third folder competes with the other two, and nobody knows where to look.
 
-## Coste en contexto
+## Cost in context
 
-El work file se lee al empezar cada sesión: debe caber en una pantalla. Si crece, lo que no es "Remaining" se resume o se mueve.
+The work file is read at the start of every session, so it has to fit on one screen. When it grows, anything that is not "Remaining" gets summarized or moved.
 
-## Límites
+## Limits
 
-- El orquestador puede olvidar actualizar el work file. El reviewer lo verifica en su gate.
-- Cambiar de sesión lo decide el humano o el agente; el harness solo da las señales.
+- The orchestrator can forget to update the work file. The reviewer checks it in its gate.
+- Switching session is a decision for the human or the agent. The harness only gives the signals.
 
-## Cómo adaptarlo
+## How to adapt it
 
-Usa el id de ticket de tu gestor como nombre del work file. Ajusta las señales de cambio de sesión si tu flujo lo pide.
+Use your tracker's ticket id as the work file name. Adjust the session-switch signals when your flow needs different ones.

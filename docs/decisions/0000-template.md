@@ -1,21 +1,23 @@
-# NNNN: <decisión en una frase>
+# NNNN: <the decision in one sentence>
 
-- Estado: propuesta | aceptada | reemplazada por NNNN
-- Fecha: AAAA-MM-DD
+**English** | [Español](0000-template.es.md)
 
-## Contexto
+- Status: proposed | accepted | replaced by NNNN
+- Date: YYYY-MM-DD
 
-Qué problema había y qué restricciones aplicaban. Con evidencia: path:line, enlace o salida de comando.
+## Context
 
-## Decisión
+What the problem was and which constraints applied. With evidence: a path:line, a link, or command output.
 
-Qué se decidió, en presente.
+## Decision
 
-## Alternativas
+What was decided, in the present tense.
 
-| Opción | Por qué no |
+## Alternatives
+
+| Option | Why not |
 |---|---|
 
-## Consecuencias
+## Consequences
 
-Qué se gana, qué se paga y qué habría que revisar si cambia el contexto.
+What you gain, what you pay, and what to revisit if the context changes.

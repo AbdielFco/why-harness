@@ -1,37 +1,39 @@
-# Portabilidad entre herramientas
+# Portability across tools
 
-## Qué es
+**English** | [Español](portability.es.md)
 
-Las piezas del harness son conceptos. Cada herramienta de agentes las ubica en una ruta distinta.
+## What it is
 
-## Por qué existe
+The pieces of the harness are concepts. Each agent tool puts them in a different path.
 
-El equipo puede usar más de una herramienta, y el harness no debería atarse a una.
+## Why it exists
 
-## Cómo funciona
+A team can use more than one tool, and the harness should not be tied to one of them.
 
-| Pieza | Cursor | Claude Code | opencode |
+## How it works
+
+| Piece | Cursor | Claude Code | opencode |
 |---|---|---|---|
-| Entrada | `AGENTS.md` | `CLAUDE.md` (puede importar `AGENTS.md`) | `AGENTS.md` |
-| Subagentes | `.cursor/agents/*.md` | `.claude/agents/*.md` | `.opencode/agent/*.md` |
+| Entry | `AGENTS.md` | `CLAUDE.md` (it can import `AGENTS.md`) | `AGENTS.md` |
+| Subagents | `.cursor/agents/*.md` | `.claude/agents/*.md` | `.opencode/agent/*.md` |
 | Skills | `.cursor/skills/*/SKILL.md` | `.claude/skills/*/SKILL.md` | `.opencode/skills/*/SKILL.md` |
 | Hooks | `.cursor/hooks.json` | `.claude/settings.json` (`hooks`) | plugins |
-| Fuera del índice | `.cursorignore` | `permissions.deny` | `permission.read` |
+| Out of the index | `.cursorignore` | `permissions.deny` | `permission.read` |
 
-`AGENTS.md` es el formato común: varias herramientas lo leen sin configuración. Por eso es la entrada, y no un archivo propio de una herramienta.
+`AGENTS.md` is the shared format: several tools read it with no configuration. That is why it is the entry point, rather than a file owned by one tool.
 
-La knowledge, la memoria, `init.sh` y `knowledge_index.py` son markdown y scripts: funcionan igual en cualquier herramienta.
+Knowledge, memory, `init.sh`, and `knowledge_index.py` are markdown and scripts. They work the same in any tool.
 
-## Coste en contexto
+## Cost in context
 
-Ninguno extra. Solo cambian las rutas.
+None extra. Only the paths change.
 
-## Límites
+## Limits
 
-- El protocolo de stdin/stdout de los hooks cambia entre herramientas. `gates.py` sigue el de Cursor; para otra herramienta, `decide()` se reusa y cambia el envoltorio de `main()`.
-- `readonly` en subagentes no existe igual en todas. Donde no existe, se reemplaza por restringir sus herramientas.
-- Las rutas de esta tabla cambian con las versiones de cada herramienta. Verifícalas en su documentación.
+- The stdin/stdout protocol of hooks differs between tools. `gates.py` follows Cursor's. For another tool, reuse `decide()` and change the `main()` wrapper.
+- `readonly` on subagents does not exist the same way everywhere. Where it does not, restrict the subagent's tools instead.
+- The paths in this table change with each tool's versions. Check them in that tool's documentation.
 
-## Cómo adaptarlo
+## How to adapt it
 
-Mantén una sola fuente (los archivos en `.cursor/` o los de la herramienta principal) y enlaza o copia hacia las demás. Dos fuentes editadas a mano se desincronizan.
+Keep a single source (the files under `.cursor/`, or those of the main tool) and link or copy toward the others. Two sources edited by hand drift apart.

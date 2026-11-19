@@ -1,77 +1,79 @@
-# Agentes y subagentes
+# Agents and subagents
 
-## Qué es
+**English** | [Español](agents-and-subagents.es.md)
 
-- **Agente principal (orquestador):** la sesión con la que habla el humano. No tiene un archivo propio; su contrato es `AGENTS.md`.
-- **Subagente:** una instancia del modelo con su propia ventana de contexto, un rol y un permiso concretos, definida en `.cursor/agents/<nombre>.md`. Recibe una entrada, trabaja aislado y devuelve un reporte.
+## What it is
 
-## Por qué existe
+- **Main agent (orchestrator):** the session the human talks to. It has no file of its own. Its contract is `AGENTS.md`.
+- **Subagent:** a model instance with its own context window, one role, and one permission, defined in `.cursor/agents/<name>.md`. It receives an input, works in isolation, and returns a report.
 
-Un solo agente que planifica, escribe tests, implementa y revisa tiene dos problemas:
+## Why it exists
 
-1. **Contexto.** Al revisar, carga toda la historia de la implementación: los intentos fallidos, las lecturas, los errores. Su ventana está llena y sesgada.
-2. **Sesgo de autor.** Quien escribió el código lo revisa con la intención en la cabeza, no con lo que el diff dice.
+One agent that plans, writes tests, implements, and reviews has two problems:
 
-Separar en subagentes resuelve las dos cosas: cada uno empieza limpio y tiene un solo trabajo.
+1. **Context.** By review time it carries the whole implementation history: failed attempts, reads, errors. Its window is full and biased.
+2. **Author bias.** Whoever wrote the code reviews it with the intention in mind, not with what the diff says.
 
-## El sentido de cada agente
+Splitting into subagents fixes both. Each one starts clean and has a single job.
 
-Cada agente existe porque separa una responsabilidad que, mezclada con otra, produce un sesgo concreto.
+## Why each agent exists
 
-| Agente | Permiso | Hace | Separa | Sesgo que evita |
+Each agent exists because it separates a responsibility that, mixed with another, produces a specific bias.
+
+| Agent | Permission | It does | It separates | Bias it avoids |
 |---|---|---|---|---|
-| **planner** | readonly | Localiza, lee, propone archivos, test, reuso, gates, riesgos | Entender de hacer | Editar antes de entender |
-| **test-writer** | solo tests | Escribe un test que falla por la razón del plan | Especificar de implementar | Un test que confirma la implementación en vez de la intención |
-| **implementer** | archivos del plan | Cambio mínimo que pone el test en verde | Implementar de ampliar alcance | El "ya que estoy" |
-| **validator** | ejecuta, no edita | Suite completa y chequeo de aceptación | Evidencia dinámica de opinión | "Debería funcionar" |
-| **reviewer** | readonly | Contrasta el diff con el plan | Juzgar de haber escrito | Revisar la intención y no el diff |
-| **orquestador** | todo, con gates | Junta reportes, escribe la memoria, aplica context gaps | Coordinar de ejecutar | Estados contradictorios entre subagentes |
+| **planner** | read-only | Locates, reads, proposes files, the test, reuse, gates, risks | Understanding from doing | Editing before understanding |
+| **test-writer** | tests only | Writes a test that fails for the reason in the plan | Specifying from implementing | A test that confirms the implementation instead of the intent |
+| **implementer** | files in the plan | The smallest change that turns the test green | Implementing from widening scope | The "while I'm here" |
+| **validator** | runs, does not edit | The full suite and the acceptance check | Runtime evidence from opinion | "It should work" |
+| **reviewer** | read-only | Compares the diff with the plan | Judging from having written | Reviewing the intention instead of the diff |
+| **orchestrator** | everything, behind gates | Collects reports, writes memory, applies context gaps | Coordinating from executing | Contradictory state between subagents |
 
-### Por qué validator y reviewer no se fusionan
+### Why validator and reviewer stay separate
 
-El validator ejecuta comandos y produce artefactos (reportes de tests, coverage). El reviewer solo lee el diff. Si se fusionan, el revisor arrastra la salida de los tests y pierde el contexto limpio, que es justo lo que lo hace útil.
+The validator runs commands and produces artifacts (test reports, coverage). The reviewer only reads the diff. Merged, the reviewer drags the test output along and loses the clean context, which is exactly what makes it useful.
 
-### Por qué test-writer e implementer no se fusionan
+### Why test-writer and implementer stay separate
 
-Si el mismo agente escribe el test y el código, el test tiende a describir lo que el código hace. Separados, el test describe lo que el plan pide, y el implementer no puede tocarlo: si el test está mal, devuelve `FAIL` y lo dice.
+If the same agent writes the test and the code, the test tends to describe what the code does. Kept apart, the test describes what the plan asks, and the implementer cannot touch it: when the test is wrong, it returns `FAIL` and says why.
 
-### Por qué planner y reviewer son readonly
+### Why planner and reviewer are read-only
 
-Un agente que no puede editar no tiene la tentación de "arreglarlo rápido". El planner tiene que entender; el reviewer tiene que juzgar. Ninguno de los dos trabajos mejora con permiso de escritura.
+An agent that cannot edit has no temptation to "just fix it". The planner has to understand. The reviewer has to judge. Neither job gets better with write permission.
 
-## Cómo funciona aquí: el contrato del reporte
+## How it works here: the report contract
 
-Los cinco devuelven la misma estructura:
+All five return the same structure:
 
 ```markdown
 ## Verdict: PASS | FAIL
-## Gate              checklist propio de cada agente
+## Gate              the checklist for this agent
 ## What is wrong
 ## What is incomplete
 ## Suggestions
 ## Context gap       AGENTS.md | skill | knowledge
 ```
 
-- **Verdict** binario: no hay "PASS con observaciones". O cumple el gate o no.
-- **Gate:** un checklist verificable. Evita que el agente se califique por impresión.
-- **Context gap:** qué le faltó para cumplir y en qué capa debería estar. Ver [feedback-loop](feedback-loop.md).
+- **Verdict** is binary. There is no "PASS with notes". It meets the gate, or it does not.
+- **Gate:** a checklist that can be verified. It stops the agent from grading itself by impression.
+- **Context gap:** what it lacked in order to comply, and which layer should hold it. See [feedback-loop](feedback-loop.md).
 
-El contrato va inline en cada agente y no en un archivo compartido: un subagente no hereda archivos, y un include costaría una lectura extra en cada invocación.
+The contract is inline in each agent, not in a shared file. A subagent does not inherit files, and an include would cost an extra read on every invocation.
 
-### Los agentes son invariantes
+### The agents are invariant
 
-Ningún agente nombra un lenguaje, un framework ni un dominio. Leen los comandos de `AGENTS.md`, el cómo de la skill que coincida y los hechos de `docs/knowledge/`. Al instalar el harness en otro proyecto, los agentes se copian sin cambios.
+No agent names a language, a framework, or a domain. They read commands from `AGENTS.md`, the how from the skill that matches, and the facts from `docs/knowledge/`. Installing the harness in another project means copying the agents unchanged.
 
-## Coste en contexto
+## Cost in context
 
-Invocar un subagente cuesta su prompt (~40 líneas) más la entrada. A cambio, todo lo que lee queda fuera de la sesión principal, que solo recibe el reporte. En una tarea normal, el planner puede leer 10 archivos y devolver 30 líneas.
+Invoking a subagent costs its prompt (about 40 lines) plus the input. In exchange, everything it reads stays out of the main session, which receives only the report. On a normal task the planner can read 10 files and return 30 lines.
 
-## Límites
+## Limits
 
-- `readonly` depende de que la herramienta lo respete. Cursor lo aplica; otras herramientas pueden no hacerlo.
-- Cinco etapas para un typo es desperdicio. Por eso existe el carril rápido ([pipeline-and-lanes](pipeline-and-lanes.md)).
-- Los subagentes no comparten memoria entre sí. Todo lo que uno necesita del otro pasa por el orquestador.
+- `readonly` depends on the tool honoring it. Cursor does. Other tools may not.
+- Five stages for a typo is waste. That is why the fast lane exists ([pipeline-and-lanes](pipeline-and-lanes.md)).
+- Subagents do not share memory with each other. Whatever one needs from another goes through the orchestrator.
 
-## Cómo adaptarlo
+## How to adapt it
 
-No edites los agentes. Si un agente falla por algo propio del proyecto, eso es un context gap: va a `AGENTS.md`, a una skill o a la knowledge.
+Do not edit the agents. When an agent fails on something specific to the project, that is a context gap: it goes to `AGENTS.md`, a skill, or knowledge.

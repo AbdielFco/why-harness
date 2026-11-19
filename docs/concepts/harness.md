@@ -1,60 +1,62 @@
 # Harness
 
-## Qué es
+**English** | [Español](harness.es.md)
 
-El **harness** es todo lo que rodea al modelo y que no es el modelo: qué lee al empezar, qué reglas sigue, qué herramientas tiene, qué no puede hacer sin permiso, cómo se verifica su trabajo y dónde guarda lo que aprende.
+## What it is
 
-El término viene de *test harness*: el andamiaje que ejecuta código bajo condiciones controladas y comprueba el resultado. Aquí el código bajo prueba es el comportamiento del agente.
+The **harness** is everything around the model that is not the model: what it reads at the start, which rules it follows, which tools it has, what it cannot do without permission, how its work is checked, and where it keeps what it learns.
+
+The word comes from *test harness*: the scaffolding that runs code under controlled conditions and checks the result. Here the code under test is the agent's behavior.
 
 ```
-agente = modelo + harness
+agent = model + harness
 ```
 
-Dos agentes con el mismo modelo y distinto harness rinden distinto. El modelo pone la capacidad; el harness decide cuánto de esa capacidad llega al resultado.
+Two agents with the same model and a different harness perform differently. The model supplies the capability. The harness decides how much of that capability reaches the result.
 
-## Por qué existe
+## Why it exists
 
-Sin harness, un agente de código:
+Without a harness, a coding agent:
 
-- **Lee de más.** Abre archivos enteros "por si acaso" y llena la ventana de contexto con ruido.
-- **Olvida.** Lo que decidió hace 40 mensajes se diluye o se compacta mal.
-- **Edita antes de entender.** Puede hacerlo, así que lo hace.
-- **Se autoaprueba.** Escribe el código y el test, y el test confirma lo que el código hace, no lo que debía hacer.
-- **Cruza límites.** Un `rm`, un `push` o un deploy son un comando más.
+- **Reads too much.** It opens whole files "just in case" and fills the context window with noise.
+- **Forgets.** What it decided 40 messages ago gets diluted or summarized badly.
+- **Edits before it understands.** It can, so it does.
+- **Approves its own work.** It writes the code and the test, and the test confirms what the code does, not what it was supposed to do.
+- **Crosses limits.** An `rm`, a `push`, or a deploy is just another command.
 
-Cada pieza de este repo ataca una de esas fallas.
+Every piece of this repo targets one of those failures.
 
-## Cómo se relaciona con otros términos
+## How it relates to other terms
 
-| Término | Pregunta que responde | Alcance |
+| Term | Question it answers | Scope |
 |---|---|---|
-| Prompt engineering | ¿Cómo redacto esta instrucción? | Un mensaje |
-| Context engineering | ¿Qué información entra a la ventana y cuándo? | Una sesión |
-| Harness engineering | ¿Qué estructura hace que cualquier sesión salga bien? | El proyecto, todas las sesiones |
+| Prompt engineering | How do I word this instruction? | One message |
+| Context engineering | What information enters the window, and when? | One session |
+| Harness engineering | What structure makes every session come out right? | The project, every session |
 
-El harness contiene a los otros dos: `AGENTS.md` y los agentes son prompts bien redactados; la búsqueda por fragmentos y las skills son context engineering. Lo que añade el harness es lo que **no** depende del modelo: hooks deterministas, `init.sh`, el contrato de reportes y la memoria en disco.
+The harness contains the other two. `AGENTS.md` and the agents are carefully written prompts. Fragment search and skills are context engineering. What the harness adds is what does **not** depend on the model: deterministic hooks, `init.sh`, the report contract, and memory on disk.
 
-## Cómo funciona aquí
+## How it works here
 
-| Falla | Pieza | Doc |
+| Failure | Piece | Doc |
 |---|---|---|
-| Lee de más | Búsqueda `path:line`, skills a demanda | [knowledge-base](knowledge-base.md), [skills](skills.md) |
-| Olvida | Work file, decisiones, knowledge | [memory-and-sessions](memory-and-sessions.md) |
-| Edita antes de entender | planner readonly + aprobación humana | [agents-and-subagents](agents-and-subagents.md) |
-| Se autoaprueba | test-writer separado, reviewer con contexto limpio | [agents-and-subagents](agents-and-subagents.md) |
-| Cruza límites | Hook `gates.py` | [hooks](hooks.md) |
-| Repite los mismos errores | Context gap | [feedback-loop](feedback-loop.md) |
+| Reads too much | `path:line` search, skills on demand | [knowledge-base](knowledge-base.md), [skills](skills.md) |
+| Forgets | Work file, decisions, knowledge | [memory-and-sessions](memory-and-sessions.md) |
+| Edits before understanding | read-only planner plus human approval | [agents-and-subagents](agents-and-subagents.md) |
+| Approves its own work | a separate test-writer, a reviewer with a clean context | [agents-and-subagents](agents-and-subagents.md) |
+| Crosses limits | The `gates.py` hook | [hooks](hooks.md) |
+| Repeats the same mistakes | Context gap | [feedback-loop](feedback-loop.md) |
 
-## Coste en contexto
+## Cost in context
 
-El harness también consume tokens: `AGENTS.md` y las `description` de las skills están siempre cargados. Por eso `AGENTS.md` se mantiene corto y enlaza en vez de copiar. La regla es que una línea siempre cargada tiene que evitar más tokens de los que cuesta.
+The harness spends tokens too. `AGENTS.md` and every skill `description` are always loaded. That is why `AGENTS.md` stays short and links instead of copying. A line that is always loaded has to save more tokens than it costs.
 
-## Límites
+## Limits
 
-- El harness no hace más inteligente al modelo. Reduce las formas de fallar.
-- Las reglas en markdown son sugerencias para el modelo. Solo el hook y `init.sh` son obligatorios.
-- Un harness demasiado grande es su propio problema: cada línea siempre cargada compite con el trabajo real.
+- The harness does not make the model smarter. It removes ways to fail.
+- Rules in markdown are suggestions to the model. Only the hook and `init.sh` are mandatory.
+- A harness that grows too large becomes its own problem: every always-loaded line competes with the real work.
 
-## Cómo adaptarlo
+## How to adapt it
 
-No se edita este concepto, se llenan las tres capas del proyecto. Ver [adopt](../adopt.md).
+Do not edit this concept. Fill the three project layers. See [adopt](../adopt.md).

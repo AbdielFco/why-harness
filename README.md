@@ -107,7 +107,7 @@ why-harness/
 ```bash
 ./scripts/init.sh                                  # session check
 python3 -m unittest discover tests                 # harness tests
-python3 -m scripts.knowledge_index search "ciclo de vida"  # the sample docs are in Spanish
+python3 -m scripts.knowledge_index search "lifecycle"
 ```
 
 To install it in a project, or to start one from this repo: the `adopt-harness` skill at `.cursor/skills/adopt-harness/SKILL.md`, and the human guide [docs/adopt.md](docs/adopt.md).
@@ -128,4 +128,4 @@ The decisions trace back to published work. The list, and what each source contr
 4. [token-economy](docs/concepts/token-economy.md): how context is optimized.
 5. [decisions/](docs/decisions/): why it is built this way.
 
-The concept, decision, and guide pages are written in Spanish.
+Every doc has a Spanish twin named `*.es.md`, linked at the top. The file without the suffix is the one to read first.

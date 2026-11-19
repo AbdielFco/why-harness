@@ -1,23 +1,25 @@
-# 0006: Agentes invariantes y tres capas de proyecto
+# 0006: Invariant agents and three project layers
 
-- Estado: aceptada
-- Fecha: 2026-11-19
+**English** | [Español](0006-invariant-agents-three-project-layers.es.md)
 
-## Contexto
+- Status: accepted
+- Date: 2026-11-19
 
-En la implementación de origen, los agentes nombraban la skill, el tipo de dato, el comando de tests y la ruta de fixtures del proyecto. Instalarlos en otro proyecto obligaba a reescribirlos todos.
+## Context
 
-## Decisión
+In the original implementation the agents named the project's skill, data type, test command, and fixture path. Installing them in another project meant rewriting all of them.
 
-Agentes, hook, `init.sh` y buscador no contienen nada del proyecto. Lo propio del proyecto vive en tres capas: `AGENTS.md` (reglas y comandos), skills (cómo se escribe código), `docs/knowledge/` (hechos). Más dos bloques marcados: `GATES` y `PROJECT CONFIG`.
+## Decision
 
-## Alternativas
+The agents, the hook, `init.sh`, and the search script contain nothing about the project. What belongs to the project lives in three layers: `AGENTS.md` (rules and commands), skills (how code is written), `docs/knowledge/` (facts). Plus two marked blocks: `GATES` and `PROJECT CONFIG`.
 
-| Opción | Por qué no |
+## Alternatives
+
+| Option | Why not |
 |---|---|
-| Agentes por proyecto | Cada proyecto mantiene su fork; las mejoras no se comparten |
-| Un archivo de config que los agentes lean | Cuarta capa que duplica `AGENTS.md` |
+| Agents per project | Each project keeps its own fork, and improvements are not shared |
+| A config file the agents read | A fourth layer that duplicates `AGENTS.md` |
 
-## Consecuencias
+## Consequences
 
-Los agentes se actualizan copiándolos. Los comandos viven en dos lugares (`AGENTS.md` y `init.sh`); el reviewer y `adopt.md` piden que coincidan.
+Agents are updated by copying them. Commands live in two places (`AGENTS.md` and `init.sh`). The reviewer and `adopt.md` require them to match.

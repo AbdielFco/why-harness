@@ -4,7 +4,7 @@
 
 Hechos del dominio: qué es cada entidad, de dónde sale cada dato y qué reglas aplican. El código dice *cómo*; esto dice *qué es verdad* y *cómo lo sabemos*.
 
-Por qué existe y cómo se busca: [concepts/knowledge-base](../concepts/knowledge-base.md).
+Por qué existe y cómo se busca: [concepts/knowledge-base](../concepts/knowledge-base.es.md).
 
 ## Estructura
 
@@ -15,7 +15,7 @@ docs/knowledge/
 └── <coleccion>/<entidad>.md     un archivo por entidad
 ```
 
-El proyecto elige sus colecciones (`entities/`, `sources/`, `rules/`, ...). Los ejemplos de este repo usan `entities/` con un dominio ficticio de tienda.
+El proyecto elige sus colecciones (`entities/`, `sources/`, `rules/`, ...). Los ejemplos de este repo usan `entities/` con un dominio ficticio de tienda. El cuerpo está en inglés y el título conserva el nombre en español entre paréntesis, para que las dos consultas encuentren el archivo.
 
 ## Formato de un archivo
 
@@ -55,7 +55,7 @@ El proyecto agrega las claves que necesite (`source`, `owner`, `code`, ...). Un 
 
 ```bash
 rg "id: order" docs/knowledge                                  # con id exacto
-python3 -m scripts.knowledge_index search "ciclo de vida orden" # por relevancia
+python3 -m scripts.knowledge_index search "lifecycle" # por relevancia
 ```
 
 ## Colecciones

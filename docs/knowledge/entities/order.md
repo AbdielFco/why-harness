@@ -5,25 +5,25 @@ verified: none
 ---
 # Order (orden, pedido)
 
-Ejemplo ficticio. Reemplázalo por una entidad real de tu dominio.
+Fictional example. Replace it with a real entity from your domain.
 
-## Qué es
+## What it is
 
-Una compra de un [customer](customer.md): uno o más productos, un total y un estado.
+A purchase by a [customer](customer.md): one or more products, a total, and a state.
 
-## Ciclo de vida
+## Lifecycle
 
-Una orden pasa por `created` -> `paid` -> `shipped` -> `delivered`. Puede pasar a `cancelled` desde `created` o `paid`, nunca después de `shipped`.
+An order moves through `created`, then `paid`, then `shipped`, then `delivered`. It can move to `cancelled` from `created` or `paid`, and never after `shipped`.
 
-Fuente: a verificar (en un proyecto real, `path:line` del enum de estados).
+Source: unverified (in a real project, the `path:line` of the state enum).
 
-## Reglas
+## Rules
 
-- El total es la suma de las líneas menos descuentos, más impuestos. Los impuestos se calculan sobre el subtotal con descuento.
-- Una orden `paid` no cambia sus líneas.
+- The total is the sum of the lines, minus discounts, plus tax. Tax is computed on the discounted subtotal.
+- A `paid` order does not change its lines.
 
-Fuente: a verificar.
+Source: unverified.
 
-## Observaciones
+## Notes
 
-En el código se llama `Order`; en soporte se le dice "pedido". Los dos términos están en el título para que la búsqueda los encuentre.
+The code calls it `Order`. Support calls it "pedido". Both words are in the title so search finds either one.

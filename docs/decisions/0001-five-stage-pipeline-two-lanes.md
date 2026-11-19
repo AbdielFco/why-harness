@@ -1,26 +1,28 @@
-# 0001: Pipeline de cinco etapas con dos carriles
+# 0001: Five-stage pipeline with two lanes
 
-- Estado: aceptada
-- Fecha: 2026-11-19
+**English** | [Español](0001-five-stage-pipeline-two-lanes.es.md)
 
-## Contexto
+- Status: accepted
+- Date: 2026-11-19
 
-Un solo agente que planifica, prueba, implementa y revisa edita antes de entender y se autoaprueba. Pero pasar cada cambio por todas las etapas gasta tokens en cambios sin riesgo (typos, docs).
+## Context
 
-## Decisión
+One agent that plans, tests, implements, and reviews edits before it understands and approves its own work. Sending every change through every stage spends tokens on changes with no risk (typos, docs).
 
-Carril normal: planner -> aprobación humana -> test-writer -> implementer -> validator -> reviewer.
-Carril rápido (docs, typos, config sin lógica): orquestador -> reviewer.
-Ante la duda, carril normal.
+## Decision
 
-## Alternativas
+Normal lane: planner, human approval, test-writer, implementer, validator, reviewer.
+Fast lane (docs, typos, config with no logic): orchestrator, then reviewer.
+When in doubt, normal lane.
 
-| Opción | Por qué no |
+## Alternatives
+
+| Option | Why not |
 |---|---|
-| Un solo agente | Sesgo de autor, contexto contaminado al revisar |
-| Pipeline único para todo | Cinco etapas para un typo |
-| Tres etapas (plan, implementar, revisar) | Pierde el test escrito antes y separado de la implementación, y la evidencia dinámica separada del juicio estático |
+| One agent | Author bias, and a contaminated context at review time |
+| One pipeline for everything | Five stages for a typo |
+| Three stages (plan, implement, review) | Loses the test written ahead of and apart from the implementation, and runtime evidence apart from static judgment |
 
-## Consecuencias
+## Consequences
 
-Más tokens totales en el carril normal, menos contexto en la sesión principal y menos retrabajo. La clasificación de carril puede fallar; el reviewer corre en ambos.
+More tokens in total on the normal lane, less context in the main session, and less rework. Lane classification can be wrong. The reviewer runs on both.

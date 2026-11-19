@@ -1,30 +1,32 @@
-# Glosario
+# Glossary
 
-| Término | Significado |
+**English** | [Español](glossary.es.md)
+
+| Term | Meaning |
 |---|---|
-| **Harness** | Todo lo que rodea al modelo: entrada, reglas, herramientas, gates, verificación y memoria. Ver [harness](harness.md). |
-| **Ventana de contexto** | Los tokens que el modelo ve en un turno. Finita, y se reenvía completa en cada turno. |
-| **Context engineering** | Decidir qué entra a la ventana, cuándo y cuándo sale. |
-| **Context base** | Lo que el agente necesita para trabajar en el repo: `AGENTS.md` y skills. |
-| **Knowledge base** | Hechos del dominio con su fuente: `docs/knowledge/`. |
-| **Memoria** | Lo que sobrevive a una sesión: work file, decisiones, knowledge. |
-| **Orquestador** | La sesión principal. Coordina subagentes y es el único que escribe el work file. |
-| **Subagente** | Instancia del modelo con ventana propia, un rol y un permiso. Devuelve un reporte. |
-| **Readonly** | Subagente que no puede editar archivos (planner, reviewer). |
-| **Pipeline** | Orden fijo de etapas: planner, aprobación, test-writer, implementer, validator, reviewer. |
-| **Carril** | Rápido (docs, typos) o normal (lógica). Define qué etapas corren. |
-| **Gate** | Checklist verificable de un agente, o acción que requiere un sí humano. |
-| **Gate humano** | Acción que necesita aprobación explícita: commit, push, borrar, dependencias, deploy. |
-| **Hook** | Script que la herramienta corre ante un evento del agente. Aquí, antes de cada comando de shell. |
-| **Fail-closed** | Ante un error o una entrada ilegible, denegar. Lo contrario, fail-open, permitir. |
-| **Skill** | `SKILL.md` con una `description` siempre cargada y un cuerpo leído a demanda. |
-| **Divulgación progresiva** | Mostrar que algo existe con poco coste y cargar el detalle solo cuando hace falta. |
-| **Trigger** | La `description` de una skill: decide cuándo se lee el cuerpo. |
-| **Work file** | `docs/work/<TICKET>.md`. Estado de la tarea activa. |
-| **ADR** | Architecture Decision Record. Un archivo por decisión con contexto, decisión y consecuencias. |
-| **Context gap** | Lo que le faltó a un agente para cumplir, y la capa donde debe ir. |
-| **Capas del proyecto** | `AGENTS.md` (reglas), skills (cómo), knowledge (qué). Lo único que cambia entre proyectos. |
-| **Invariante** | Pieza que se copia sin editar: agentes, hook, `init.sh`, buscador. |
-| **BM25** | Ranking de recuperación de información basado en frecuencia del término, rareza y longitud. |
-| **Chunk** | Fragmento indexado: una sección `## ` de un doc de knowledge. |
-| **Fallar temprano** | Detectar un entorno roto antes de gastar la sesión: `init.sh`. |
+| **Harness** | Everything around the model: entry point, rules, tools, gates, verification, and memory. See [harness](harness.md). |
+| **Context window** | The tokens the model sees in one turn. Finite, and resent in full on every turn. |
+| **Context engineering** | Deciding what enters the window, when, and when it leaves. |
+| **Context base** | What the agent needs in order to work in the repo: `AGENTS.md` and skills. |
+| **Knowledge base** | Domain facts with their source: `docs/knowledge/`. |
+| **Memory** | What survives a session: the work file, decisions, knowledge. |
+| **Orchestrator** | The main session. It coordinates subagents and is the only writer of the work file. |
+| **Subagent** | A model instance with its own window, one role, and one permission. It returns a report. |
+| **Read-only** | A subagent that cannot edit files (planner, reviewer). |
+| **Pipeline** | The fixed stage order: planner, approval, test-writer, implementer, validator, reviewer. |
+| **Lane** | Fast (docs, typos) or normal (logic). It decides which stages run. |
+| **Gate** | A verifiable checklist on an agent, or an action that needs a human yes. |
+| **Human gate** | An action that needs explicit approval: commit, push, delete, dependencies, deploy. |
+| **Hook** | A script the tool runs on an agent event. Here, before every shell command. |
+| **Fail-closed** | On an error or an unreadable input, deny. The opposite, fail-open, allows. |
+| **Skill** | A `SKILL.md` with a `description` always loaded and a body read on demand. |
+| **Progressive disclosure** | Showing that something exists at low cost, and loading the detail only when it is needed. |
+| **Trigger** | A skill's `description`: it decides when the body is read. |
+| **Work file** | `docs/work/<TICKET>.md`. State of the active task. |
+| **ADR** | Architecture Decision Record. One file per decision, with context, the decision, and consequences. |
+| **Context gap** | What an agent lacked in order to comply, and the layer it belongs in. |
+| **Project layers** | `AGENTS.md` (rules), skills (how), knowledge (what). The only thing that changes between projects. |
+| **Invariant** | A piece copied without edits: agents, the hook, `init.sh`, the search script. |
+| **BM25** | An information-retrieval rank based on term frequency, rarity, and length. |
+| **Chunk** | An indexed fragment: one `## ` section of a knowledge doc. |
+| **Fail early** | Detecting a broken environment before spending the session: `init.sh`. |

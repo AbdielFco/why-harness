@@ -1,83 +1,85 @@
-# Pipeline y carriles
+# Pipeline and lanes
 
-## Qué es
+**English** | [Español](pipeline-and-lanes.es.md)
 
-El orden fijo en que una tarea pasa por los agentes, con dos carriles según el riesgo del cambio.
+## What it is
 
-## Por qué existe
+The fixed order in which a task passes through the agents, with two lanes according to the risk of the change.
 
-- **Orden fijo:** el agente no decide sobre la marcha si hace falta un test o una revisión. Lo decide la estructura.
-- **Aprobación humana en un solo punto:** el humano aprueba el plan, no cada edición. Es el punto más barato para corregir el rumbo: todavía no hay código.
-- **Dos carriles:** pasar un typo por cinco etapas gasta tokens sin reducir riesgo. Saltarse etapas en un cambio de lógica ahorra tokens y agrega riesgo.
+## Why it exists
 
-## Cómo funciona aquí
+- **Fixed order:** the agent does not decide on the fly whether a test or a review is needed. The structure decides.
+- **One human approval point:** the human approves the plan, not every edit. It is the cheapest moment to correct course: there is no code yet.
+- **Two lanes:** sending a typo through five stages spends tokens without reducing risk. Skipping stages on a logic change saves tokens and adds risk.
+
+## How it works here
 
 ```mermaid
 flowchart TD
-  start["init.sh: fail fast"] --> entry["AGENTS.md: reglas, comandos, carriles"]
-  entry --> work["docs/work/TICKET.md: memoria de la tarea"]
-  work --> lane{"Carril"}
-  lane -->|"rápido: docs, typo, config sin lógica"| fastEdit["Orquestador edita"]
+  start["init.sh: fail fast"] --> entry["AGENTS.md: rules, commands, lanes"]
+  entry --> work["docs/work/TICKET.md: task memory"]
+  work --> lane{"Lane"}
+  lane -->|"fast: docs, typo, config with no logic"| fastEdit["Orchestrator edits"]
   fastEdit --> rev
-  lane -->|"normal: cualquier lógica"| planner["planner readonly"]
-  planner --> human["Aprobación humana"]
-  human --> tw["test-writer: test que falla"]
-  tw --> impl["implementer: cambio mínimo"]
-  impl --> val["validator: suite y aceptación"]
-  val --> rev["reviewer readonly: diff vs plan"]
-  rev -->|PASS| close["Cierre: aplicar context gaps, commit solo con orden"]
+  lane -->|"normal: any logic"| planner["planner, read only"]
+  planner --> human["Human approval"]
+  human --> tw["test-writer: a failing test"]
+  tw --> impl["implementer: the smallest change"]
+  impl --> val["validator: suite and acceptance"]
+  val --> rev["reviewer, read only: diff vs plan"]
+  rev -->|PASS| close["Close: apply context gaps, commit only on request"]
   planner -->|FAIL| planner
   tw -->|FAIL| tw
   impl -->|FAIL| impl
   val -->|FAIL| impl
   rev -->|FAIL| impl
-  close --> layers["Mejorar AGENTS.md, skill o knowledge"]
-  hook["gates.py: cada comando shell"] -.->|"ask o deny"| impl
+  close --> layers["Improve AGENTS.md, a skill, or knowledge"]
+  hook["gates.py: every shell command"] -.->|"ask or deny"| impl
   search["knowledge_index: path:line"] -.-> planner
 ```
 
-### Carriles
+### Lanes
 
-| Carril | Cuándo | Etapas |
+| Lane | When | Stages |
 |---|---|---|
-| Rápido | Docs, typos, comentarios, config sin lógica | orquestador -> reviewer |
-| Normal | Cualquier cambio de lógica, comportamiento o interfaz | las seis etapas |
+| Fast | Docs, typos, comments, config with no logic | orchestrator, then reviewer |
+| Normal | Any change to logic, behavior, or an interface | all six stages |
 
-Ante la duda, carril normal. El reviewer corre en los dos carriles porque es la etapa más barata que atrapa secretos y restos de debug.
+When in doubt, normal lane. The reviewer runs on both lanes because it is the cheapest stage that catches secrets and debug leftovers.
 
-### A dónde vuelve cada FAIL
+### Where each FAIL returns
 
-| Falla | Vuelve a | Por qué |
+| Failure | Returns to | Why |
 |---|---|---|
-| planner | planner | Le faltó información: se completa y se replanifica |
-| test-writer | test-writer | El test no falla por la razón correcta |
-| implementer | implementer | El test no pasa todavía |
-| validator | implementer | La suite o la aceptación muestran que el código está mal |
-| reviewer | implementer | El diff no cumple el plan |
+| planner | planner | Information was missing: complete it and replan |
+| test-writer | test-writer | The test does not fail for the right reason |
+| implementer | implementer | The test does not pass yet |
+| validator | implementer | The suite or the acceptance check shows the code is wrong |
+| reviewer | implementer | The diff does not match the plan |
 
-Si el implementer concluye que el problema está en el plan o en el test, devuelve `FAIL` y lo dice; el orquestador decide si vuelve al planner.
+When the implementer concludes the problem is in the plan or the test, it returns `FAIL` and says so. The orchestrator decides whether to go back to the planner.
 
-### Paso a paso de una tarea normal
+### A normal task, step by step
 
-1. `./scripts/init.sh`. Si falla, no se avanza.
-2. El orquestador crea `docs/work/<TICKET>.md` desde la plantilla.
-3. **planner** devuelve el plan. El orquestador lo copia al work file.
-4. **Humano** aprueba o corrige.
-5. **test-writer** deja un test rojo.
-6. **implementer** lo pone en verde.
-7. **validator** corre todo y la aceptación del work file.
-8. **reviewer** revisa el diff.
-9. Cierre: context gaps aplicados, decisión registrada si la hubo, resumen al PR, work file borrado. Commit solo con orden explícita.
+1. `./scripts/init.sh`. A failure stops the session.
+2. The orchestrator creates `docs/work/<TICKET>.md` from the template.
+3. **planner** returns the plan. The orchestrator copies it into the work file.
+4. The **human** approves or corrects it.
+5. **test-writer** leaves a red test.
+6. **implementer** turns it green.
+7. **validator** runs the suite and the acceptance check in the work file.
+8. **reviewer** reviews the diff.
+9. Close: context gaps applied, a decision recorded when one was made, the summary in the PR, the work file deleted. Commit only on an explicit order.
 
-## Coste en contexto
+## Cost in context
 
-El carril normal cuesta más tokens en total que un solo agente haciendo todo, pero menos en la sesión principal, y produce menos retrabajo. El carril rápido cuesta casi lo mismo que editar directo, más una revisión.
+The normal lane costs more tokens in total than one agent doing everything, and less in the main session, and it produces less rework. The fast lane costs about as much as editing directly, plus a review.
 
-## Límites
+## Limits
 
-- El pipeline no impide que el humano apruebe un mal plan.
-- La clasificación de carril la hace el orquestador; puede equivocarse. Por eso la regla es "ante la duda, normal".
+- The pipeline does not stop a human from approving a bad plan.
+- The orchestrator classifies the lane, and it can be wrong. That is why the rule is "when in doubt, normal".
 
-## Cómo adaptarlo
+## How to adapt it
 
-Ajusta la definición de cada carril en `AGENTS.md`, sección Lanes. El orden de las etapas no cambia.
+Adjust the definition of each lane in `AGENTS.md`, section Lanes. The order of the stages does not change.

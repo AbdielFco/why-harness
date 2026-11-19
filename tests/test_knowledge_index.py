@@ -69,7 +69,7 @@ class CliTest(unittest.TestCase):
             self.assertEqual(ki.main(["search"]), 2)
 
     def test_repo_examples_are_findable(self):
-        hits = ki.search(ki.build_index(ki.load_docs(ROOT)), "ciclo de vida orden")
+        hits = ki.search(ki.build_index(ki.load_docs(ROOT)), "order lifecycle")
         self.assertTrue(hits)
         self.assertTrue(hits[0]["path"].startswith("docs/knowledge/"))
 

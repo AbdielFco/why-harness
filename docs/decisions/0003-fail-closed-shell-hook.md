@@ -1,24 +1,26 @@
-# 0003: Hook de shell fail-closed
+# 0003: Fail-closed shell hook
 
-- Estado: aceptada
-- Fecha: 2026-11-19
+**English** | [Español](0003-fail-closed-shell-hook.es.md)
 
-## Contexto
+- Status: accepted
+- Date: 2026-11-19
 
-Las acciones irreversibles (push, borrar, deploy, cambiar dependencias) son un comando más para el agente. Una regla en el prompt cuesta tokens en cada turno y puede ignorarse.
+## Context
 
-## Decisión
+Irreversible actions (push, delete, deploy, change dependencies) are just another command to the agent. A rule in the prompt costs tokens on every turn and can be ignored.
 
-`beforeShellExecution` corre `gates.py`. Si un regex de `GATES` coincide, responde `ask`. Si el payload no se puede leer, `deny`. `hooks.json` declara `failClosed: true`, así que si el script falla, el comando no corre.
+## Decision
 
-## Alternativas
+`beforeShellExecution` runs `gates.py`. When a `GATES` regex matches, it answers `ask`. When the payload cannot be read, `deny`. `hooks.json` sets `failClosed: true`, so a failed script blocks the command.
 
-| Opción | Por qué no |
+## Alternatives
+
+| Option | Why not |
 |---|---|
-| Solo reglas en `AGENTS.md` | No son obligatorias y cuestan tokens siempre |
-| Fail-open ante error | Un hook roto desactivaría todos los frenos sin aviso |
-| `deny` para todo gate | Bloquea trabajo legítimo; `ask` deja decidir al humano |
+| Rules in `AGENTS.md` only | They are not mandatory and they cost tokens always |
+| Fail-open on error | A broken hook would disable every brake with no warning |
+| `deny` for every gate | It blocks legitimate work. `ask` leaves the decision to the human |
 
-## Consecuencias
+## Consequences
 
-Cero tokens, testeable. Solo ve texto de shell: ediciones de archivo y escrituras dentro de procesos siguen dependiendo de `AGENTS.md`. Produce falsos positivos a propósito.
+Zero tokens, and testable. It only sees shell text: file edits and writes inside a process still depend on `AGENTS.md`. It produces false positives on purpose.

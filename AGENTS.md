@@ -1,6 +1,9 @@
 # AGENTS.md
 
+**English** | [Español](AGENTS.es.md)
+
 Entry point for every agent session. Keep it short: link, do not copy.
+Headings stay in English. Agents match them.
 Blocks marked `PROJECT` are the only part you edit when installing the harness. Everything else is invariant.
 
 <!-- PROJECT: one paragraph. What the project does and where its state lives. -->

@@ -1,13 +1,15 @@
-# Adoptar el harness en un proyecto
+# Adopt the harness in a project
 
-Tiempo estimado: una hora para la base, y después crece con los context gaps.
+**English** | [Español](adopt.es.md)
 
-Para que un agente lo haga, el skill es [`.cursor/skills/adopt-harness/SKILL.md`](../.cursor/skills/adopt-harness/SKILL.md). Cubre las dos vías: instalarlo dentro de un proyecto que ya existe, o forkear este repo y usarlo como base. La licencia es MIT ([LICENSE](../LICENSE)): se puede copiar y modificar, y el aviso de copyright viaja con los archivos.
+About an hour for the base. After that it grows through context gaps.
 
-## 1. Copiar los invariantes
+For an agent to do it, the skill is [`.cursor/skills/adopt-harness/SKILL.md`](../.cursor/skills/adopt-harness/SKILL.md). It covers both paths: install into a project that already exists, or fork this repo and use it as the base. The license is MIT ([LICENSE](../LICENSE)): you can copy and modify it, and the copyright notice travels with the files.
+
+## 1. Copy the invariants
 
 ```
-.cursor/agents/           los 5 agentes, sin cambios
+.cursor/agents/           the five agents, unchanged
 .cursor/hooks.json
 .cursor/hooks/gates.py
 scripts/init.sh
@@ -18,43 +20,43 @@ docs/decisions/0000-template.md
 docs/knowledge/README.md
 ```
 
-Si el proyecto ya tiene `scripts/`, ajusta las rutas en `init.sh` y en `AGENTS.md`. El buscador lee `docs/knowledge/` relativo a la raíz del repo.
+When the project already has `scripts/`, adjust the paths in `init.sh` and in `AGENTS.md`. The search script reads `docs/knowledge/` relative to the repo root.
 
-Copia también `tests/test_gates.py` y `tests/test_knowledge_index.py` si quieres que la suite del proyecto proteja el harness. Ajusta `test_repo_examples_are_findable` a tu propia knowledge.
+Also copy `tests/test_gates.py` and `tests/test_knowledge_index.py` when the project's suite should protect the harness. Point `test_repo_examples_are_findable` at your own knowledge.
 
-## 2. Llenar los bloques editables
+## 2. Fill the editable blocks
 
-| Archivo | Bloque | Qué poner |
+| File | Block | What to put |
 |---|---|---|
-| `AGENTS.md` | `PROJECT` (4 bloques) | Descripción, comandos exactos, gates humanos, reglas de código |
+| `AGENTS.md` | `PROJECT` (4 blocks) | Description, exact commands, human gates, code rules |
 | `scripts/init.sh` | `PROJECT CONFIG` | `TOOLS`, `TEST_CMD`, `PROJECT_FILES` |
-| `.cursor/hooks/gates.py` | `GATES` | Los gates de shell de tu `AGENTS.md` |
+| `.cursor/hooks/gates.py` | `GATES` | The shell gates from your `AGENTS.md` |
 
-Regla: los comandos de `AGENTS.md` y `TEST_CMD` de `init.sh` deben coincidir.
+The commands in `AGENTS.md` and `TEST_CMD` in `init.sh` must match.
 
-## 3. Crear la primera skill
+## 3. Create the first skill
 
-Una sola, para el área de código que más se toca. Usa `.cursor/skills/example/SKILL.md` como plantilla y bórrala después. Ver [skills](concepts/skills.md).
+One, for the area of code you touch most. Use `.cursor/skills/example/SKILL.md` as the template and delete it afterwards. See [skills](concepts/skills.md).
 
-## 4. Sembrar la knowledge
+## 4. Seed the knowledge
 
-No documentes todo el dominio de golpe. Empieza con las tres o cuatro entidades que aparecen en casi todas las tareas. El resto llega por context gaps. Ver [knowledge/README](knowledge/README.md).
+Do not document the whole domain at once. Start with the three or four entities that show up in most tasks. The rest arrives through context gaps. See [knowledge/README](knowledge/README.md).
 
-## 5. Verificar
+## 5. Verify
 
 ```bash
 ./scripts/init.sh
-echo '{"command":"git push"}' | python3 .cursor/hooks/gates.py   # debe responder ask
-echo 'basura' | python3 .cursor/hooks/gates.py                 # debe responder deny
-python3 -m scripts.knowledge_index search "<una entidad tuya>"
+echo '{"command":"git push"}' | python3 .cursor/hooks/gates.py   # must answer ask
+echo 'not json' | python3 .cursor/hooks/gates.py                 # must answer deny
+python3 -m scripts.knowledge_index search "<one of your entities>"
 ```
 
-## 6. Primera tarea
+## 6. First task
 
-Elige una tarea pequeña de carril normal y recórrela entera. Al cerrar, aplica los context gaps. Las primeras tres tareas son las que más mejoran el harness.
+Pick a small normal-lane task and run it end to end. On close, apply the context gaps. The first three tasks improve the harness the most.
 
-## Qué no hacer
+## What not to do
 
-- No editar los agentes para meter reglas del proyecto. Eso es un context gap: va a una capa.
-- No crecer `AGENTS.md` con todo. Si una regla aplica a un área, va a su skill.
-- No abrir el workspace en una carpeta padre si quieres que el hook funcione: Cursor carga el `hooks.json` del workspace abierto.
+- Do not edit the agents to add project rules. That is a context gap: it goes to a layer.
+- Do not grow `AGENTS.md` with everything. A rule that applies to one area goes in its skill.
+- Do not open the workspace on a parent folder if you want the hook to run: Cursor loads the `hooks.json` of the workspace you opened.

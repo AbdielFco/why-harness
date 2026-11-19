@@ -1,24 +1,26 @@
-# 0004: BM25 en memoria en lugar de embeddings
+# 0004: In-memory BM25 instead of embeddings
 
-- Estado: aceptada
-- Fecha: 2026-11-19
+**English** | [Español](0004-in-memory-bm25-over-embeddings.es.md)
 
-## Contexto
+- Status: accepted
+- Date: 2026-11-19
 
-El agente necesita encontrar un hecho sin abrir archivos enteros. Las opciones habituales son búsqueda vectorial (embeddings) o léxica.
+## Context
 
-## Decisión
+The agent needs to find a fact without opening whole files. The usual options are vector search (embeddings) or lexical search.
 
-`scripts/knowledge_index.py`: BM25 sobre fragmentos (uno por `## `), índice construido en memoria en cada llamada, solo stdlib. Devuelve `path:line heading score`.
+## Decision
 
-## Alternativas
+`scripts/knowledge_index.py`: BM25 over fragments (one per `## `), an index built in memory on every call, stdlib only. It returns `path:line heading score`.
 
-| Opción | Por qué no |
+## Alternatives
+
+| Option | Why not |
 |---|---|
-| Embeddings + base vectorial | Dependencias, índice que regenerar y que se desfasa, resultados no deterministas |
-| Índice BM25 commiteado | Se desfasa de los docs y obliga a regenerarlo |
-| Solo `grep` | Sin ranking; sin nombre exacto devuelve demasiado o nada |
+| Embeddings plus a vector database | Dependencies, an index to regenerate that drifts, non-deterministic results |
+| A committed BM25 index | It drifts from the docs and has to be regenerated |
+| `grep` only | No ranking. Without an exact name it returns too much or nothing |
 
-## Consecuencias
+## Consequences
 
-Determinista y testeable, sin dependencias. No entiende sinónimos. Revisar si el corpus pasa de miles de documentos o las consultas dejan de usar los términos de los docs.
+Deterministic and testable, with no dependencies. It does not understand synonyms. Revisit this if the corpus passes thousands of documents, or queries stop using the words in the docs.

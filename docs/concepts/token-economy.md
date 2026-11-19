@@ -1,54 +1,56 @@
-# Economía de tokens
+# Token economy
 
-## Qué es
+**English** | [Español](token-economy.es.md)
 
-El conjunto de técnicas que reducen los tokens que entran a la ventana del modelo **sin reducir la calidad**. Muchas veces la calidad sube, porque menos ruido es más atención para lo que importa.
+## What it is
 
-## Por qué existe
+The set of techniques that reduce the tokens entering the model's window **without reducing quality**. Quality often goes up, because less noise means more attention for what matters.
 
-- Cada turno reenvía el contexto acumulado. Un archivo leído al principio se paga en cada turno siguiente.
-- La calidad cae con el ruido antes de llegar al límite de la ventana.
-- Tokens son dinero y latencia.
+## Why it exists
 
-## Las ocho técnicas
+- Every turn resends the accumulated context. A file read at the start is paid on every later turn.
+- Quality drops from noise before the window limit is reached.
+- Tokens are money and latency.
 
-| # | Técnica | Pieza | Zona | Qué evita |
+## The eight techniques
+
+| # | Technique | Piece | Zone | What it avoids |
 |---|---|---|---|---|
-| 1 | Entrada corta que enlaza | `AGENTS.md` | siempre | Pagar en cada turno reglas que la tarea no usa |
-| 2 | Divulgación progresiva | skills | a demanda | Cargar el cómo de diez áreas para tocar una |
-| 3 | Resultados `path:line` | `knowledge_index.py` | a demanda | Abrir archivos enteros para encontrar un dato |
-| 4 | Subagentes con reporte fijo | `.cursor/agents/` | aislado | Que las lecturas de una etapa llenen la sesión principal |
-| 5 | Gates en código | `gates.py` | cero | Reglas de permiso en el prompt de cada turno |
-| 6 | Fallar temprano | `init.sh` | cero | Una sesión entera sobre un entorno roto |
-| 7 | Memoria en disco + cambio de sesión | work file | a demanda | Arrastrar un contexto degradado |
-| 8 | Fuera del índice | `.cursorignore` | cero | Secretos y artefactos generados en búsquedas |
+| 1 | A short entry point that links | `AGENTS.md` | always | Paying, every turn, for rules the task does not use |
+| 2 | Progressive disclosure | skills | on demand | Loading the how of ten areas to touch one |
+| 3 | `path:line` results | `knowledge_index.py` | on demand | Opening whole files to find one fact |
+| 4 | Subagents with a fixed report | `.cursor/agents/` | isolated | One stage's reads filling the main session |
+| 5 | Gates in code | `gates.py` | zero | Permission rules in the prompt of every turn |
+| 6 | Fail early | `init.sh` | zero | A whole session on a broken environment |
+| 7 | Memory on disk plus a session switch | work file | on demand | Dragging a degraded context along |
+| 8 | Out of the index | `.cursorignore` | zero | Secrets and generated artifacts in search |
 
-## Cómo funciona: un ejemplo
+## How it works: an example
 
-Tarea: "corregir el cálculo del total de una orden".
+Task: "fix the order total calculation".
 
-**Sin harness:** el agente abre el módulo de órdenes (400 líneas), los tests (300), dos archivos de utilidades (250), busca "total" en todo el repo y abre tres resultados más. Escribe el fix y el test. Revisa su propio trabajo con todo eso en contexto. Al día siguiente, en otra sesión, vuelve a leer todo para recordar dónde quedó.
+**Without a harness:** the agent opens the orders module (400 lines), the tests (300), two utility files (250), searches "total" across the repo, and opens three more hits. It writes the fix and the test. It reviews its own work with all of that in context. The next day, in another session, it reads everything again to remember where it left off.
 
-**Con harness:**
+**With the harness:**
 
-1. `AGENTS.md` (~80 líneas) y las `description` de las skills ya están cargados.
-2. El planner, en su propia ventana, busca `"total orden"` y obtiene `docs/knowledge/entities/order.md:12 Reglas`. Lee esa sección y los dos archivos de código que importan. Devuelve un plan de 30 líneas.
-3. La sesión principal solo recibe esas 30 líneas.
-4. test-writer, implementer y validator trabajan aislados; cada uno devuelve su reporte.
-5. El reviewer recibe el diff, no la historia.
-6. Al día siguiente: `AGENTS.md` + work file y se sigue desde "Remaining".
+1. `AGENTS.md` (about 80 lines) and the skill `description`s are already loaded.
+2. The planner, in its own window, searches `"order total"` and gets `docs/knowledge/entities/order.md:18 Rules`. It reads that section and the two code files that matter. It returns a 30-line plan.
+3. The main session receives only those 30 lines.
+4. test-writer, implementer, and validator work in isolation. Each returns its report.
+5. The reviewer receives the diff, not the history.
+6. The next day: `AGENTS.md` plus the work file, and work continues from "Remaining".
 
-La sesión principal nunca vio los archivos completos. Lo que vio fueron planes, reportes y un diff.
+The main session never saw the full files. It saw plans, reports, and a diff.
 
-## Coste en contexto
+## Cost in context
 
-Lo que el harness cobra siempre: `AGENTS.md` y una `description` por skill. Todo lo demás es a demanda, aislado o cero.
+What the harness always charges: `AGENTS.md` and one `description` per skill. Everything else is on demand, isolated, or zero.
 
-## Límites
+## Limits
 
-- El total de tokens del carril normal (sumando subagentes) puede ser mayor que el de un solo agente. Lo que baja es el contexto de la sesión principal y el retrabajo.
-- El agente puede ignorar `path:line` y leer el archivo entero. El harness guía, no obliga.
+- The total tokens of the normal lane, adding up the subagents, can exceed one agent doing everything. What goes down is the main session's context and the rework.
+- The agent can ignore `path:line` and read the whole file. The harness guides. It does not force.
 
-## Cómo adaptarlo
+## How to adapt it
 
-Para cada regla nueva, elige la zona más barata que funcione: código (cero), subagente (aislado), skill o knowledge (a demanda), y solo al final `AGENTS.md` (siempre).
+For every new rule, pick the cheapest zone that works: code (zero), a subagent (isolated), a skill or knowledge (on demand), and only at the end `AGENTS.md` (always).
