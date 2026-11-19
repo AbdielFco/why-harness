@@ -41,10 +41,10 @@ verified: 2026-11-19
 1. **Exact:** with a known identifier, search the text (`rg "id: order" docs/knowledge`). No ambiguity.
 2. **By relevance:** without an exact name, `python3 -m scripts.knowledge_index search "<query>"`.
 
-The second returns one line per hit, not files:
+The second returns one line per hit, not files. Real output for `order lifecycle`:
 
 ```
-docs/knowledge/entities/order.md:14 Lifecycle 5.6437
+docs/knowledge/entities/order.md:14 Lifecycle 3.3722
 ```
 
 The agent reads only that section. A 200-line file becomes a 15-line read.
@@ -54,6 +54,48 @@ The agent reads only that section. A 200-line file becomes a 15-line read.
 `knowledge_index.py` splits each file into fragments, one per `## `, and ranks them with BM25: a classic information-retrieval score based on how often the term appears in the fragment, how rare it is in the corpus, and the fragment's length.
 
 The index is built on every call and is not saved. A few hundred files take milliseconds.
+
+### The search flow, step by step
+
+```mermaid
+flowchart TD
+  task["Task: fix the order total"] --> known{"Does the agent know the id?"}
+  known -->|yes| exact["rg 'id: order' docs/knowledge"]
+  known -->|no| query["Agent writes a short query: order lifecycle"]
+  query --> tok["Script tokenizes the query only"]
+  tok --> score["BM25 scores every ## fragment"]
+  score --> top["Keep score > 0, sort, take the top 5"]
+  top --> out["One line per hit: path:line heading score"]
+  exact --> read["Agent reads that section only"]
+  out --> read
+```
+
+1. **The script never sees the task or the chat.** The agent chooses the query words. The planner does it in step 2 of its prompt (`.cursor/agents/planner.md`).
+2. **Tokenizing.** Lowercase. A word is a run of letters and digits, so punctuation splits words. There is no stopword list: "the" or "de" count when they appear, but a word found in many fragments weighs less (IDF).
+3. **Fragments.** Each `## ` section keeps its own text plus the frontmatter values of its file. So `order` from `id: order` also counts in every section of `order.md`.
+4. **Scoring.** For each fragment, add the score of every query word it contains. Drop zeros, sort by score (ties by path, then line), keep 5.
+5. **Output.** One line per hit. The agent reads from that line to the next `## `.
+
+### What the score means
+
+The score is BM25 for one query. It is not a percentage and it has no fixed scale. A word adds more when it appears more often in the fragment (with diminishing returns), when it is rare across the corpus, and when the fragment is shorter than average. Compare scores only inside the same search.
+
+| Field | Meaning |
+|---|---|
+| `path` | File, relative to the repo root |
+| `line` | Line of the `## ` heading, 1-based |
+| `heading` | Heading text |
+| `score` | BM25 for this query, rounded to 4 decimals |
+
+Measured on this repo's knowledge, with `search`:
+
+| Query | Top hit | Score | What it shows |
+|---|---|---|---|
+| `order lifecycle` | `entities/order.md:14 Lifecycle` | 3.3722 | Both words in the same section: the highest score |
+| `order` | `README.md:19 File format` | 1.2691 | The format section repeats `id: order`; the entity is not in the top 5 |
+| `pedido` | `entities/order.md:27 Notes` | 3.0009 | The Spanish name appears only in that section |
+| `client` | no hits | — | No synonyms |
+| `xyzzy` | no hits | — | Nothing matches; the script prints `no hits` and exits 0 |
 
 ### Why not embeddings
 
