@@ -11,6 +11,7 @@ Index. The content lives in each folder.
 | [knowledge/](knowledge/README.md) | Domain facts, each with its source | Any change that depends on a fact |
 | [work/](work/0000-template.md) | Memory of the active task. Deleted when it closes | At the start and at the end of each phase |
 | [adopt.md](adopt.md) | How to install the harness in a project | Once, when adopting it |
+| [references.md](references.md) | Research sources behind each decision | When asking why a piece exists |
 
 ## Concepts
 

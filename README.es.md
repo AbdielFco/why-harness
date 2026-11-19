@@ -85,7 +85,9 @@ why-harness/
 │   ├── agents/               planner, test-writer, implementer, validator, reviewer
 │   ├── hooks.json            beforeShellExecution -> gates.py
 │   ├── hooks/gates.py        motor + tupla GATES (único bloque editable)
-│   └── skills/example/       plantilla de skill
+│   └── skills/
+│       ├── adopt-harness/    instala este harness en un proyecto
+│       └── example/          plantilla de skill, se reemplaza al instalar
 ├── scripts/
 │   ├── init.sh               check de sesión (bloque PROJECT CONFIG arriba)
 │   └── knowledge_index.py    búsqueda BM25 en memoria sobre docs/knowledge
@@ -93,6 +95,7 @@ why-harness/
 └── docs/
     ├── README.md             índice: qué leer y cuándo
     ├── adopt.md              cómo instalarlo en un proyecto
+    ├── references.md         fuentes de investigación detrás de cada decisión
     ├── concepts/             qué es cada pieza, por qué existe, cómo funciona
     ├── decisions/            ADRs: el porqué de cada decisión
     ├── knowledge/            formato de la knowledge base y ejemplos
@@ -107,7 +110,15 @@ python3 -m unittest discover tests                        # tests del harness
 python3 -m scripts.knowledge_index search "ciclo de vida" # buscar en la knowledge
 ```
 
-Para instalarlo en tu proyecto: [docs/adopt.md](docs/adopt.md).
+Para instalarlo en un proyecto, o para empezar uno desde este repo: el skill `adopt-harness` en `.cursor/skills/adopt-harness/SKILL.md`, y la guía [docs/adopt.md](docs/adopt.md).
+
+## Licencia
+
+[MIT](LICENSE). Se puede forkear, copiar a otro proyecto y modificar. Conserva el aviso de copyright: la licencia exige que viaje con los archivos. El botón Fork de GitHub aparece cuando el repositorio es público.
+
+## Referencias
+
+Las decisiones salen de trabajo publicado. La lista, y qué aporta cada fuente, está en [docs/references.es.md](docs/references.es.md).
 
 ## Leer en este orden
 
