@@ -11,6 +11,7 @@
 | [knowledge/](knowledge/README.es.md) | Hechos del dominio, con fuente | Cualquier cambio que dependa de un dato |
 | [work/](work/0000-template.md) | Memoria de la tarea activa. Se borra al cerrar | Al empezar y al cerrar cada fase |
 | [adopt.md](adopt.md) | Cómo instalar el harness en un proyecto | Una vez, al adoptarlo |
+| [references.es.md](references.es.md) | Fuentes de investigación detrás de cada decisión | Al preguntar por qué existe una pieza |
 
 ## Conceptos
 

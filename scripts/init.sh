@@ -25,6 +25,7 @@ HARNESS_FILES=(
   .cursor/agents/implementer.md
   .cursor/agents/validator.md
   .cursor/agents/reviewer.md
+  .cursor/skills/adopt-harness/SKILL.md
   scripts/knowledge_index.py
   docs/README.md
   docs/knowledge/README.md

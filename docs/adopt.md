@@ -2,6 +2,8 @@
 
 Tiempo estimado: una hora para la base, y después crece con los context gaps.
 
+Para que un agente lo haga, el skill es [`.cursor/skills/adopt-harness/SKILL.md`](../.cursor/skills/adopt-harness/SKILL.md). Cubre las dos vías: instalarlo dentro de un proyecto que ya existe, o forkear este repo y usarlo como base. La licencia es MIT ([LICENSE](../LICENSE)): se puede copiar y modificar, y el aviso de copyright viaja con los archivos.
+
 ## 1. Copiar los invariantes
 
 ```
