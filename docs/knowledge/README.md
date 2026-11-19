@@ -4,7 +4,7 @@
 
 Domain facts: what each entity is, where each datum comes from, and which rules apply. Code says *how*; this says *what is true* and *how we know*.
 
-Why it exists and how search works: [concepts/knowledge-base](../concepts/knowledge-base.md) (in Spanish).
+Why it exists and how search works: [concepts/knowledge-base](../concepts/knowledge-base.md).
 
 ## Layout
 
@@ -14,7 +14,7 @@ docs/knowledge/
 └── <collection>/<entity>.md     one file per entity
 ```
 
-The project chooses its collections (`entities/`, `sources/`, `rules/`, ...). The examples in this repo use `entities/` with a fictional store domain, and their body is in Spanish.
+The project chooses its collections (`entities/`, `sources/`, `rules/`, ...). The examples in this repo use `entities/` with a fictional store domain. The body is English, and the title keeps the Spanish name in parentheses so both queries hit.
 
 ## File format
 
@@ -54,7 +54,7 @@ The project adds whatever keys it needs (`source`, `owner`, `code`, ...). A valu
 
 ```bash
 rg "id: order" docs/knowledge                        # exact id
-python3 -m scripts.knowledge_index search "order"    # by relevance
+python3 -m scripts.knowledge_index search "lifecycle"    # by relevance
 ```
 
 ## Collections

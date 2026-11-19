@@ -9,7 +9,7 @@ Index. The content lives in each folder.
 | [concepts/](concepts/) | What each piece is, why it exists, how it works | To understand or change the harness |
 | [decisions/](decisions/) | ADRs: why the harness is built this way | Before changing a piece |
 | [knowledge/](knowledge/README.md) | Domain facts, each with its source | Any change that depends on a fact |
-| [work/](work/0000-template.md) | Memory of the active task. Deleted when it closes | At the start and at the end of each phase |
+| [work/](work/0000-template.md) | Memory of the active task. Deleted when it closes. [Español](work/0000-template.es.md) | At the start and at the end of each phase |
 | [adopt.md](adopt.md) | How to install the harness in a project | Once, when adopting it |
 | [references.md](references.md) | Research sources behind each decision | When asking why a piece exists |
 
@@ -30,7 +30,7 @@ Index. The content lives in each folder.
 | [portability](concepts/portability.md) | The same pieces in other tools |
 | [glossary](concepts/glossary.md) | Terms |
 
-These pages are written in Spanish.
+Every page has a Spanish twin named `*.es.md`, linked at the top.
 
 Search the knowledge base: `python3 -m scripts.knowledge_index search "<query>"`.
 With an exact id, search the text directly under `knowledge/`.

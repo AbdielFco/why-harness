@@ -1,55 +1,57 @@
 # Hooks
 
-## Qué es
+**English** | [Español](hooks.es.md)
 
-Un **hook** es un script que la herramienta ejecuta antes o después de un evento del agente. Aquí se usa `beforeShellExecution`: antes de correr cualquier comando de shell, Cursor le pasa el comando a `.cursor/hooks/gates.py` por stdin y espera una respuesta: `allow`, `ask` o `deny`.
+## What it is
 
-## Por qué existe
+A **hook** is a script the tool runs before or after an agent event. This repo uses `beforeShellExecution`: before any shell command runs, Cursor passes the command to `.cursor/hooks/gates.py` on stdin and waits for `allow`, `ask`, or `deny`.
 
-Una regla escrita en `AGENTS.md` ("no hagas push sin permiso") es una sugerencia: el modelo la lee, ocupa tokens y puede olvidarla o reinterpretarla. Un hook es código:
+## Why it exists
 
-| | Regla en el prompt | Hook |
+A rule written in `AGENTS.md` ("do not push without permission") is a suggestion. The model reads it, it costs tokens, and the model can forget it or reinterpret it. A hook is code:
+
+| | Rule in the prompt | Hook |
 |---|---|---|
-| Se cumple | Casi siempre | Siempre |
-| Coste en tokens | En cada turno | Cero |
-| Se puede testear | No | Sí (`tests/test_gates.py`) |
-| Ve | Todo lo que el modelo entiende | Solo el texto del comando |
+| It holds | Almost always | Always |
+| Token cost | Every turn | Zero |
+| Testable | No | Yes (`tests/test_gates.py`) |
+| It sees | Whatever the model understands | Only the command text |
 
-Lo que se puede verificar con código no se le pide al modelo.
+What code can check is not asked of the model.
 
-## Cómo funciona aquí
+## How it works here
 
 ```mermaid
 flowchart LR
-  agent["Agente quiere correr un comando"] --> cursor["Cursor"]
+  agent["Agent wants to run a command"] --> cursor["Cursor"]
   cursor -->|"stdin JSON"| gates["gates.py"]
-  gates -->|"no coincide"| allow["allow"]
-  gates -->|"coincide un GATE"| ask["ask: el humano confirma"]
-  gates -->|"payload ilegible"| deny["deny"]
+  gates -->|"no match"| allow["allow"]
+  gates -->|"a GATE matches"| ask["ask: the human confirms"]
+  gates -->|"unreadable payload"| deny["deny"]
 ```
 
-- `gates.py` recorre la tupla `GATES` (regex, nombre). La primera que coincide devuelve `ask`.
-- **Fail-closed:** si stdin no es JSON, no es un objeto o el comando no es texto, responde `deny`. Y `hooks.json` declara `"failClosed": true`: si el script se cae, el comando no corre.
-- Los gates por defecto son genéricos: commit, push, borrar, cambiar dependencias, deploy, infraestructura, y editar `.cursor/hooks/` (el agente no puede desactivar sus propios frenos sin permiso).
+- `gates.py` walks the `GATES` tuple of `(regex, name)`. The first match returns `ask`.
+- **Fail-closed:** when stdin is not JSON, is not an object, or the command is not text, it answers `deny`. And `hooks.json` sets `"failClosed": true`, so a crashed script blocks the command.
+- The default gates are generic: commit, push, delete, change dependencies, deploy, infrastructure, and editing `.cursor/hooks/` (the agent cannot disable its own brakes without permission).
 
-## Coste en contexto
+## Cost in context
 
-Cero. El hook corre fuera del modelo. Solo cuando responde `ask` aparece un mensaje corto.
+Zero. The hook runs outside the model. A short message appears only when it answers `ask`.
 
-## Límites
+## Limits
 
-- **Solo ve texto de shell.** No ve una edición de archivo, una escritura hecha dentro de un proceso en ejecución ni un borrado hecho desde código. Esos gates siguen dependiendo de `AGENTS.md`.
-- **Regex sobre texto.** Un comando ofuscado (`r''m`, variables, `eval`) puede escapar. Es un freno para errores honestos, no una frontera de seguridad contra un adversario.
-- **Falsos positivos.** `\bdeploy\b` también coincide con `rg deploy`. Es intencional: preguntar de más es barato, no preguntar es caro.
-- **Workspace anidado.** Cursor carga el `hooks.json` del workspace abierto. Si abres una carpeta padre, el `hooks.json` de un repo anidado no se carga.
+- **It only sees shell text.** It does not see a file edit, a write done inside a running process, or a delete done from code. Those gates still depend on `AGENTS.md`.
+- **Regex over text.** An obfuscated command (`r''m`, variables, `eval`) can slip through. It is a brake for honest mistakes, not a security boundary against an adversary.
+- **False positives.** `\bdeploy\b` also matches `rg deploy`. That is intentional: asking once too often is cheap, and not asking is expensive.
+- **Nested workspace.** Cursor loads the `hooks.json` of the workspace you opened. Opening a parent folder does not load a nested repo's `hooks.json`.
 
-## Extensiones
+## Extensions
 
-- `beforeReadFile`: denegar la lectura de `.env` y credenciales por código, en vez de confiar en la instrucción del prompt.
-- `afterFileEdit`: correr un formateador o un lint rápido después de cada edición.
+- `beforeReadFile`: deny reading `.env` and credentials in code, instead of trusting the prompt.
+- `afterFileEdit`: run a formatter or a fast lint after each edit.
 
-Cada extensión es un script más con su test. Agrégalas cuando una regla de `AGENTS.md` se incumpla en la práctica.
+Each extension is one more script with its own test. Add one when a rule in `AGENTS.md` gets broken in practice.
 
-## Cómo adaptarlo
+## How to adapt it
 
-Edita solo la tupla `GATES` en `gates.py` para reflejar la sección "Human gates" de tu `AGENTS.md`. Agrega un caso a `tests/test_gates.py` por cada gate nuevo.
+Edit only the `GATES` tuple in `gates.py`, so it matches the "Human gates" section of your `AGENTS.md`. Add one case to `tests/test_gates.py` for each new gate.

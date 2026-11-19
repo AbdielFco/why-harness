@@ -23,12 +23,12 @@ Fuentes detrás de las decisiones en [decisions/](decisions/). Cada una es una i
 
 | Fuente | Qué aporta aquí |
 |---|---|
-| Stephen Robertson y Hugo Zaragoza, [The Probabilistic Relevance Framework: BM25 and Beyond](https://doi.org/10.1561/1500000019), Foundations and Trends in Information Retrieval 3(4), 333–389, 2009 | El ranking de `scripts/knowledge_index.py`: frecuencia del término, frecuencia inversa en el corpus y normalización por longitud. En memoria y sin dependencias a propósito; el tradeoff está en el [ADR 0004](decisions/0004-in-memory-bm25-over-embeddings.md). |
+| Stephen Robertson y Hugo Zaragoza, [The Probabilistic Relevance Framework: BM25 and Beyond](https://doi.org/10.1561/1500000019), Foundations and Trends in Information Retrieval 3(4), 333–389, 2009 | El ranking de `scripts/knowledge_index.py`: frecuencia del término, frecuencia inversa en el corpus y normalización por longitud. En memoria y sin dependencias a propósito; el tradeoff está en el [ADR 0004](decisions/0004-in-memory-bm25-over-embeddings.es.md). |
 
 ## Convenciones y cumplimiento
 
 | Fuente | Qué aporta aquí |
 |---|---|
-| [AGENTS.md](https://agents.md/), a cargo de la Agentic AI Foundation bajo la Linux Foundation | El archivo abierto y neutral para las instrucciones del proyecto. Es el punto de entrada para que las mismas reglas sirvan en Cursor, Claude Code y opencode. Ver [portability](concepts/portability.md). |
+| [AGENTS.md](https://agents.md/), a cargo de la Agentic AI Foundation bajo la Linux Foundation | El archivo abierto y neutral para las instrucciones del proyecto. Es el punto de entrada para que las mismas reglas sirvan en Cursor, Claude Code y opencode. Ver [portability](concepts/portability.es.md). |
 | Cursor, [Hooks](https://cursor.com/docs/hooks) | `beforeShellExecution` recibe el comando por stdin y responde `allow`, `ask` o `deny`. `failClosed: true` bloquea el comando si el script falla. Eso es `.cursor/hooks.json` y `gates.py`. |
-| Jerome H. Saltzer y Michael D. Schroeder, [The Protection of Information in Computer Systems](https://doi.org/10.1109/PROC.1975.9939), Proceedings of the IEEE 63(9), 1975 | Defaults a prueba de fallos: una decisión que no se puede tomar se niega. El hook niega un payload que no puede leer. Ver [ADR 0003](decisions/0003-fail-closed-shell-hook.md). |
+| Jerome H. Saltzer y Michael D. Schroeder, [The Protection of Information in Computer Systems](https://doi.org/10.1109/PROC.1975.9939), Proceedings of the IEEE 63(9), 1975 | Defaults a prueba de fallos: una decisión que no se puede tomar se niega. El hook niega un payload que no puede leer. Ver [ADR 0003](decisions/0003-fail-closed-shell-hook.es.md). |

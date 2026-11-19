@@ -1,23 +1,25 @@
 # Knowledge base
 
-## Qué es
+**English** | [Español](knowledge-base.es.md)
 
-Una carpeta de markdown (`docs/knowledge/`) con los **hechos del dominio**: qué es cada entidad, de dónde sale cada dato, qué reglas de negocio aplican. Un archivo por entidad, con frontmatter plano para lo que se busca por clave.
+## What it is
 
-No es documentación de código. El código dice *cómo*; la knowledge dice *qué es verdad* y *de dónde lo sabemos*.
+A markdown folder (`docs/knowledge/`) of **domain facts**: what each entity is, where each datum comes from, which business rules apply. One file per entity, with flat frontmatter for anything looked up by key.
 
-## Por qué existe
+It is not code documentation. Code says *how*. Knowledge says *what is true* and *how we know*.
 
-- El modelo no conoce tu dominio. Sin una fuente escrita, lo infiere del código y adivina.
-- Un hecho que solo vive en la conversación se pierde al cambiar de sesión.
-- Un hecho sin fuente no se puede verificar. La regla es que **todo hecho lleva su fuente** (URL, `path:line`, comando) o dice "a verificar".
+## Why it exists
 
-## Cómo funciona aquí
+- The model does not know your domain. Without a written source it infers the fact from the code and guesses.
+- A fact that lives only in the conversation is lost when the session changes.
+- A fact without a source cannot be checked. The rule is that **every fact carries its source** (a URL, a `path:line`, or a command) or says "unverified".
 
-### Formato
+## How it works here
+
+### Format
 
 ```
-docs/knowledge/<coleccion>/<entidad>.md
+docs/knowledge/<collection>/<entity>.md
 ```
 
 ```markdown
@@ -27,54 +29,54 @@ status: active
 verified: 2026-11-19
 ---
 # Order
-## Qué es
-## Fuente
-## Reglas
+## What it is
+## Source
+## Rules
 ```
 
-`id`, `status` y `verified` son obligatorios. El proyecto agrega las claves que necesite. Formato completo en [knowledge/README](../knowledge/README.md).
+`id`, `status`, and `verified` are required. The project adds whatever keys it needs. Full format in [knowledge/README](../knowledge/README.md).
 
-### Búsqueda en dos pasos
+### Search in two steps
 
-1. **Exacta:** con un identificador conocido, se busca el texto (`rg "id: order" docs/knowledge`). Cero ambigüedad.
-2. **Por relevancia:** sin nombre exacto, `python3 -m scripts.knowledge_index search "<consulta>"`.
+1. **Exact:** with a known identifier, search the text (`rg "id: order" docs/knowledge`). No ambiguity.
+2. **By relevance:** without an exact name, `python3 -m scripts.knowledge_index search "<query>"`.
 
-La segunda devuelve una línea por resultado, no archivos:
+The second returns one line per hit, not files:
 
 ```
-docs/knowledge/entities/order.md:7 Ciclo de vida 2.3141
+docs/knowledge/entities/order.md:14 Lifecycle 5.6437
 ```
 
-El agente lee solo esa sección. Un archivo de 200 líneas se convierte en una lectura de 15.
+The agent reads only that section. A 200-line file becomes a 15-line read.
 
-### BM25 en memoria
+### BM25 in memory
 
-`knowledge_index.py` divide cada archivo en fragmentos, uno por `## `, y los ordena con BM25: un ranking clásico de recuperación de información que puntúa según la frecuencia del término en el fragmento y su rareza en el corpus, y normaliza por longitud.
+`knowledge_index.py` splits each file into fragments, one per `## `, and ranks them with BM25: a classic information-retrieval score based on how often the term appears in the fragment, how rare it is in the corpus, and the fragment's length.
 
-El índice se construye en cada llamada y no se guarda. Para unos cientos de archivos tarda milisegundos.
+The index is built on every call and is not saved. A few hundred files take milliseconds.
 
-### Por qué no embeddings
+### Why not embeddings
 
-| | BM25 en memoria | Embeddings + base vectorial |
+| | In-memory BM25 | Embeddings plus a vector database |
 |---|---|---|
-| Dependencias | Ninguna, stdlib | Modelo de embeddings, DB, cliente |
-| Determinista | Sí, mismo input, mismo orden | Depende del modelo y su versión |
-| Índice que regenerar | No | Sí, y puede quedar desfasado |
-| Sinónimos | No | Sí |
-| Testeable | Trivial | Difícil |
+| Dependencies | None, stdlib | An embedding model, a database, a client |
+| Deterministic | Yes: same input, same order | Depends on the model and its version |
+| An index to regenerate | No | Yes, and it can drift from the docs |
+| Synonyms | No | Yes |
+| Testable | Trivial | Hard |
 
-Para un corpus pequeño y técnico, donde las consultas usan los mismos términos que los docs, BM25 alcanza. Si el corpus crece a miles de documentos o las consultas son conceptuales, conviene reconsiderarlo con un ADR.
+For a small technical corpus, where queries use the same words as the docs, BM25 is enough. If the corpus grows to thousands of documents, or queries stop using the docs' own words, reconsider it with an ADR.
 
-## Coste en contexto
+## Cost in context
 
-Un resultado cuesta unos 15 tokens. Leer el fragmento cuesta lo que mida la sección. La alternativa, abrir archivos hasta encontrar el dato, cuesta varios archivos completos.
+One hit costs about 15 tokens. Reading the fragment costs whatever the section measures. The alternative, opening files until the fact turns up, costs several whole files.
 
-## Límites
+## Limits
 
-- No entiende sinónimos: "cliente" no encuentra "customer". Mitigación: poner los dos términos en el doc.
-- Un `## ` muy largo es un fragmento muy largo. Mantén secciones cortas.
-- El frontmatter es plano (`clave: valor`). No admite listas ni anidamiento.
+- It does not understand synonyms: "client" does not find "customer". Mitigation: write both words in the doc.
+- A very long `## ` is a very long fragment. Keep sections short.
+- Frontmatter is flat (`key: value`). It does not allow lists or nesting.
 
-## Cómo adaptarlo
+## How to adapt it
 
-Elige las colecciones de tu dominio (`entities/`, `sources/`, `rules/`, ...) y las claves extra del frontmatter. El buscador no cambia.
+Choose the collections for your domain (`entities/`, `sources/`, `rules/`, ...) and the extra frontmatter keys. The search script does not change.

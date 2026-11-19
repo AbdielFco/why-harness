@@ -1,7 +1,11 @@
-# <TICKET>: <título corto>
+# <TICKET>: <short title>
 
-Memoria de la tarea activa. Solo el orquestador escribe aquí. Se borra al cerrar la tarea.
-Debe caber en una pantalla: lo que no sea "Remaining" se resume.
+**English** | [Español](0000-template.es.md)
+
+Memory of the active task. Only the orchestrator writes here. Deleted when the task closes.
+Keep it to one screen: summarize anything that is not "Remaining".
+
+The headings below stay in English. Agents match them.
 
 ## Phase
 
@@ -13,27 +17,27 @@ fast | normal
 
 ## Goal
 
-Una o dos frases: qué cambia y cómo se sabe que está hecho.
+One or two sentences: what changes, and how you know it is done.
 
 ## Plan
 
-Copiado del reporte del planner una vez aprobado: archivos, test, reuso, gates, riesgos.
+Copied from the planner's report once it is approved: files, the test, reuse, gates, risks.
 
 ## Remaining
 
-- [ ] Próximo paso concreto
+- [ ] The next concrete step
 
 ## Verification
 
-Chequeo de aceptación que el validator corre además de la suite. Un comando y su resultado esperado.
-"La suite alcanza" si no hace falta otro.
+The acceptance check the validator runs in addition to the suite. One command and its expected result.
+"The suite is enough" when nothing else is needed.
 
 ## Context gaps
 
-Copiados de los reportes. Se aplican al cerrar.
+Copied from the reports. Applied on close.
 
-- capa (AGENTS.md | skill | knowledge): qué faltó
+- layer (AGENTS.md | skill | knowledge): what was missing
 
 ## Log
 
-- AAAA-MM-DD: hecho relevante, en una línea
+- YYYY-MM-DD: one relevant fact, in one line

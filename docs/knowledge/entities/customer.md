@@ -5,18 +5,18 @@ verified: none
 ---
 # Customer (cliente)
 
-Ejemplo ficticio. Reemplázalo por una entidad real de tu dominio.
+Fictional example. Replace it with a real entity from your domain.
 
-## Qué es
+## What it is
 
-Quien compra. Tiene cero o más [orders](order.md).
+Whoever buys. A customer has zero or more [orders](order.md).
 
-## Identidad
+## Identity
 
-Se identifica por email, único y en minúsculas. Un cambio de email no crea un customer nuevo.
+Identified by email, unique and lowercase. Changing the email does not create a new customer.
 
-Fuente: a verificar (en un proyecto real, `path:line` del índice único).
+Source: unverified (in a real project, the `path:line` of the unique index).
 
-## Observaciones
+## Notes
 
-Un customer sin órdenes no se borra automáticamente.
+A customer with no orders is not deleted automatically.

@@ -1,57 +1,59 @@
-# Ciclo de retroalimentación: context gap
+# Feedback loop: the context gap
 
-## Qué es
+**English** | [Español](feedback-loop.es.md)
 
-Cada reporte de agente termina con una sección **Context gap**: qué le faltó para cumplir y en cuál de las tres capas debería estar.
+## What it is
+
+Every agent report ends with a **Context gap** section: what the agent lacked in order to comply, and which of the three layers should hold it.
 
 ```markdown
 ## Context gap
-- knowledge: no hay doc para la entidad "refund"; inferí el estado desde el código.
-- skill: la skill de endpoints no dice dónde va la validación de input.
+- knowledge: there is no doc for the "refund" entity; I inferred the state from the code.
+- skill: the endpoint skill does not say where input validation goes.
 ```
 
-Al cerrar la tarea, el orquestador aplica cada gap a su capa. Es el mecanismo con el que el harness mejora con el uso.
+When the task closes, the orchestrator applies each gap to its layer. That is how the harness improves with use.
 
-## Por qué existe
+## Why it exists
 
-Sin este ciclo, el mismo hueco se paga en cada tarea: cada sesión vuelve a leer el código para inferir lo mismo, o vuelve a equivocarse en lo mismo. Con el ciclo, el hueco se paga una vez.
+Without this loop, the same gap is paid on every task: every session rereads the code to infer the same fact, or makes the same mistake again. With the loop, the gap is paid once.
 
-Es la diferencia entre un agente que **se corrige** (en la conversación, y se pierde) y un harness que **aprende** (en disco, y se queda).
+An agent **corrects itself** in the conversation, and the correction is lost. A harness **learns** on disk, and the correction stays.
 
-## Cómo funciona aquí
+## How it works here
 
 ```mermaid
 flowchart LR
-  agent["Agente devuelve reporte"] --> gap["Context gap: capa y qué faltó"]
-  gap --> workFile["Orquestador lo anota en el work file"]
-  workFile --> closeTask["Cierre de la tarea"]
-  closeTask --> agentsMd["AGENTS.md: regla o comando"]
-  closeTask --> skill["skill: cómo se escribe aquí"]
-  closeTask --> kb["knowledge: un hecho"]
-  agentsMd --> next["La próxima tarea no tiene ese hueco"]
+  agent["Agent returns a report"] --> gap["Context gap: the layer and what was missing"]
+  gap --> workFile["Orchestrator records it in the work file"]
+  workFile --> closeTask["Task close"]
+  closeTask --> agentsMd["AGENTS.md: a rule or a command"]
+  closeTask --> skill["skill: how code is written here"]
+  closeTask --> kb["knowledge: a fact"]
+  agentsMd --> next["The next task does not have that gap"]
   skill --> next
   kb --> next
 ```
 
-### A qué capa va cada gap
+### Which layer a gap belongs to
 
-| El agente no sabía... | Capa |
+| The agent did not know... | Layer |
 |---|---|
-| qué comando corre los tests, qué requiere permiso | `AGENTS.md` |
-| cómo se estructura o se prueba este tipo de código | skill |
-| qué significa un dato, de dónde sale, qué regla aplica | `docs/knowledge/` |
+| which command runs the tests, what needs permission | `AGENTS.md` |
+| how this kind of code is structured or tested | skill |
+| what a datum means, where it comes from, which rule applies | `docs/knowledge/` |
 
-Nunca va al agente. Si un gap pide editar un agente, es una señal de que el agente se está acoplando al proyecto.
+It never belongs in an agent. A gap that asks to edit an agent is a sign the agent is coupling itself to the project.
 
-## Coste en contexto
+## Cost in context
 
-Unas pocas líneas por reporte. El ahorro aparece en las tareas siguientes.
+A few lines per report. The saving shows up on the tasks that follow.
 
-## Límites
+## Limits
 
-- El agente puede reportar un gap falso para justificar un error. El orquestador lo filtra.
-- Aplicar gaps sin criterio infla `AGENTS.md`. Ante la duda, a la capa a demanda (skill o knowledge), no a la siempre cargada.
+- An agent can report a false gap to justify a mistake. The orchestrator filters those.
+- Applying gaps without judgment inflates `AGENTS.md`. When in doubt, use the on-demand layer (a skill or knowledge), not the always-loaded one.
 
-## Cómo adaptarlo
+## How to adapt it
 
-Nada que adaptar: las tres capas son las mismas en cualquier proyecto.
+Nothing to adapt. The three layers are the same in every project.

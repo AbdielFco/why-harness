@@ -22,7 +22,7 @@ Hay dos tipos de archivos:
 | Cómo se escribe código aquí | ¿Qué patrón sigo? | `.cursor/skills/` |
 | Qué es verdad en el dominio | ¿Qué significa esto y de dónde sale? | `docs/knowledge/` |
 
-Cuando un agente falla por falta de contexto, su reporte dice en cuál de las tres capas estaba el hueco. Así el harness mejora con el uso (ver [feedback-loop](docs/concepts/feedback-loop.md)).
+Cuando un agente falla por falta de contexto, su reporte dice en cuál de las tres capas estaba el hueco. Así el harness mejora con el uso (ver [feedback-loop](docs/concepts/feedback-loop.es.md)).
 
 ## Flujo
 
@@ -74,7 +74,7 @@ flowchart LR
   end
 ```
 
-Detalle en [token-economy](docs/concepts/token-economy.md).
+Detalle en [token-economy](docs/concepts/token-economy.es.md).
 
 ## Estructura
 
@@ -107,10 +107,10 @@ why-harness/
 ```bash
 ./scripts/init.sh                                         # check de sesión
 python3 -m unittest discover tests                        # tests del harness
-python3 -m scripts.knowledge_index search "ciclo de vida" # buscar en la knowledge
+python3 -m scripts.knowledge_index search "lifecycle" # buscar en la knowledge
 ```
 
-Para instalarlo en un proyecto, o para empezar uno desde este repo: el skill `adopt-harness` en `.cursor/skills/adopt-harness/SKILL.md`, y la guía [docs/adopt.md](docs/adopt.md).
+Para instalarlo en un proyecto, o para empezar uno desde este repo: el skill `adopt-harness` en `.cursor/skills/adopt-harness/SKILL.md`, y la guía [docs/adopt.es.md](docs/adopt.es.md).
 
 ## Licencia
 
@@ -122,10 +122,10 @@ Las decisiones salen de trabajo publicado. La lista, y qué aporta cada fuente, 
 
 ## Leer en este orden
 
-1. [harness](docs/concepts/harness.md): qué es un harness y en qué se diferencia de un prompt.
-2. [agents-and-subagents](docs/concepts/agents-and-subagents.md): el sentido de cada agente.
-3. [pipeline-and-lanes](docs/concepts/pipeline-and-lanes.md): cómo fluye una tarea.
-4. [token-economy](docs/concepts/token-economy.md): cómo se optimiza el contexto.
-5. [decisions/](docs/decisions/): por qué es así y no de otra forma.
+1. [harness](docs/concepts/harness.es.md): qué es un harness y en qué se diferencia de un prompt.
+2. [agents-and-subagents](docs/concepts/agents-and-subagents.es.md): el sentido de cada agente.
+3. [pipeline-and-lanes](docs/concepts/pipeline-and-lanes.es.md): cómo fluye una tarea.
+4. [token-economy](docs/concepts/token-economy.es.md): cómo se optimiza el contexto.
+5. [decisions/](docs/decisions/0001-five-stage-pipeline-two-lanes.es.md): por qué es así y no de otra forma.
 
-Las páginas de conceptos, decisiones y guías están en español.
+El archivo sin sufijo es la versión en inglés, y es la principal. Cada página enlaza su par en español arriba.
